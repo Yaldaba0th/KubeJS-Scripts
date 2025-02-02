@@ -4,6 +4,7 @@
 // More scripts at: https://github.com/Yaldaba0th/KubeJS-Scripts/
 
 // Place this file in the kubejs/server_scripts folder of your Minecraft instance.
+// Version 1.0
 
 let crushingByInput = {}
 
