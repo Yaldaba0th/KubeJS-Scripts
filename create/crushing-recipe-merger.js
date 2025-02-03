@@ -1,12 +1,13 @@
 // Crushing Recipe Merger
 // Merges different Create crushing recipes for the same input item.
 // Averages the chances and processing time.
-// More scripts at: https://github.com/Yaldaba0th/KubeJS-Scripts/
+// GitHub Repository: https://github.com/Yaldaba0th/KubeJS-Scripts/
 
 // Place this file in the kubejs/server_scripts folder of your Minecraft instance.
-// Version 1.0
 
-let crushingByInput = {}
+let scriptVersion = "1.0";
+
+let crushingByInput = {};
 
 function processIngredient(ingredient) {
     var input = "";
@@ -54,11 +55,12 @@ function addByInput(inputype, recipe) {
 }
 
 ServerEvents.recipes(event => {
-    console.log("Starting Crushing Recipe Merger script...");
+    console.log("Starting Crushing Recipe Merger script (Version: " + scriptVersion + ")...");
     console.log("You can check the latest version of this file at:");
     console.log("https://github.com/Yaldaba0th/KubeJS-Scripts/blob/main/create/crushing-recipe-merger.js");
     console.log("-------------------------------");
     console.log("Looking for recipes...");
+
     // get recipes by input
     event.forEachRecipe({ type: 'create:crushing' }, recipe => {
         const ingredients = recipe.json.get('ingredients').get(0);
@@ -76,10 +78,9 @@ ServerEvents.recipes(event => {
 
         console.log("-------------------------------");
 
-    })
+    });
 
     console.log("Inputs with multiple recipes:");
-
     console.log("-------------------------------");
 
     for (let input in crushingByInput) {
@@ -138,4 +139,4 @@ ServerEvents.recipes(event => {
     console.log("-------------------------------");
     console.log("Finished Crushing Recipe Merger script.");
 
-})
+});
