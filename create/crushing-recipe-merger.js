@@ -5,7 +5,7 @@
 
 // Place this file in the kubejs/server_scripts folder of your Minecraft instance.
 
-let scriptVersion = "1.0";
+let scriptVersion = "1.1";
 
 let crushingByInput = {};
 
@@ -22,7 +22,7 @@ function processIngredient(ingredient) {
         return [input, "tag"];
     } else {
         console.log("Nothing to do.");
-        return [];
+        return [null, null];
     }
 
 }
@@ -54,6 +54,28 @@ function addByInput(inputype, recipe) {
 
 }
 
+let allowedInputTypes = ["item", "tag"];
+
+function processingHelper(ingredient, recipe) {
+    var skipCheck = false;
+    try {
+        var keyWords = Array.from(ingredient.keySet().toArray());
+        skipCheck = keyWords.some(kw => !allowedInputTypes.includes(kw));
+
+        if (skipCheck) {
+            console.log("Weird Keys: ", keyWords);
+            return;
+        }
+    } catch (error) {
+        //Nothing
+    }
+
+    var inputype = [];
+    inputype = processIngredient(ingredient);
+    addByInput(inputype, recipe);
+
+}
+
 ServerEvents.recipes(event => {
     console.log("Starting Crushing Recipe Merger script (Version: " + scriptVersion + ")...");
     console.log("You can check the latest version of this file at:");
@@ -64,16 +86,31 @@ ServerEvents.recipes(event => {
     // get recipes by input
     event.forEachRecipe({ type: 'create:crushing' }, recipe => {
         const ingredients = recipe.json.get('ingredients').get(0);
-        var inputype = [];
+
         if (ingredients.size() > 1) {
-            for (let i = 0; i < ingredients.size(); i++) {
-                inputype = processIngredient(ingredients.get(i));
-                addByInput(inputype, recipe);
+            let skipCheck = false;
+            try {
+                let keyWords = Array.from(ingredients.keySet().toArray());
+                skipCheck = keyWords.some(kw => !allowedInputTypes.includes(kw));
+                if (skipCheck) {
+                    console.log("Weird Keys: ", keyWords);
+                }
+
+
+            } catch (error) {
+                //Nothing.
             }
+
+            if (!skipCheck) {
+                for (let i = 0; i < ingredients.size(); i++) {
+                    processingHelper(ingredients.get(i), recipe);
+                }
+            }
+
         }
         else {
-            inputype = processIngredient(ingredients);
-            addByInput(inputype, recipe);
+            processingHelper(ingredients, recipe);
+
         }
 
         console.log("-------------------------------");
