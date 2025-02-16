@@ -1,6 +1,6 @@
 // Cutting Recipe Merger
 // Merges different Farmer's Delight recipes for the same input item.
-// REduces individual chances proportionally to the merged recipes.
+// Reduces individual chances proportionally to the merged recipes.
 // GitHub Repository: https://github.com/Yaldaba0th/KubeJS-Scripts/
 
 // Place this file in the kubejs/server_scripts folder of your Minecraft instance.
