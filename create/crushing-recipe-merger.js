@@ -5,11 +5,9 @@
 
 // Place this file in the kubejs/server_scripts folder of your Minecraft instance.
 
-
-
 function crushingMerge() {
 
-    let scriptVersion = "1.2";
+    let scriptVersion = "1.3";
 
     let crushingByInput = {};
 
@@ -156,6 +154,28 @@ function crushingMerge() {
                     }
 
                 }
+
+                var mergedResults = [];
+                var resultMap = {};
+
+                for (let result of newResults) {
+                    var resultKey = `${result.item}_${result.count}`; // Changed 'key' to 'resultKey'
+                    if (!resultMap[resultKey]) {
+                        resultMap[resultKey] = {
+                            item: result.item,
+                            count: result.count,
+                            chance: 0
+                        };
+                    }
+                    resultMap[resultKey].chance += result.chance;
+                }
+
+                mergedResults = Object.values(resultMap).map(result => ({
+                    item: result.item,
+                    count: result.count,
+                    chance: Math.min(result.chance, 1.0)
+                }));
+
                 var newTime = Math.floor(oldTime / recipenum);
 
                 // remove old recipes
@@ -170,7 +190,7 @@ function crushingMerge() {
                     type: 'create:crushing',
                     ingredients: newIngredients,
                     processingTime: newTime,
-                    results: newResults
+                    results: mergedResults
                 })
 
             }
