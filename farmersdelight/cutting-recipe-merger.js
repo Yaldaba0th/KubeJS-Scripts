@@ -13,44 +13,56 @@ let cutters = ["farmersdelight:flint_knife", "farmersdelight:iron_knife", "farme
 
 function getTool(tool) {
     var input = "";
-    if (tool.has('item')) {
-        input = tool.get("item");
-        return [("" + input).replace(/['"]/g, ''), "item"]
-    }
-    else if (tool.has('tag')) {
-        input = tool.get("tag");
-        return [("" + input).replace(/['"]/g, ''), "tag"]
-    }
-    else {
+    try {
+        if (tool.has('item')) {
+            input = tool.get("item");
+            return [("" + input).replace(/['"]/g, ''), "item"]
+        }
+        else if (tool.has('tag')) {
+            input = tool.get("tag");
+            return [("" + input).replace(/['"]/g, ''), "tag"]
+        }
+        else {
+            return [null, null]
+        }
+    } catch (error) {
+        console.log("ERROR IN TOOL.");
         return [null, null]
     }
+
 
 }
 
 function processIngredient(ingredient, recipe) {
     var input = "";
-    if (ingredient.has('item')) {
-        input = ingredient.get("item");
-        console.log("Found input:", input);
-        addByInput([input, "item", null], recipe);
-    }
-    else if (ingredient.has('tag')) {
-        input = ingredient.get("tag");
-        console.log("Found input:", input);
+    try {
+        if (ingredient.has('item')) {
+            input = ingredient.get("item");
+            console.log("Found input:", input);
+            addByInput([input, "item", null], recipe);
+        }
+        else if (ingredient.has('tag')) {
+            input = ingredient.get("tag");
+            console.log("Found input:", input);
 
-        var tagstr = ("#" + input).replace(/['"]/g, '');
-        console.log("Tag Detected: ", tagstr);
-        let itemIds = Ingredient.of(tagstr).itemIds
-        itemIds.forEach(id => {
-            console.log(id);
-            addByInput([id, "item", tagstr], recipe);
-        });
+            var tagstr = ("#" + input).replace(/['"]/g, '');
+            console.log("Tag Detected: ", tagstr);
+            let itemIds = Ingredient.of(tagstr).itemIds
+            itemIds.forEach(id => {
+                console.log(id);
+                addByInput([id, "item", tagstr], recipe);
+            });
 
 
-    } else {
-        console.log("Nothing to do.");
+        } else {
+            console.log("Nothing to do.");
+            return [null, null, null];
+        }
+    } catch (error) {
+        console.log("ERROR IN PROCESS: ", recipe.json);
         return [null, null, null];
     }
+
 
 }
 
@@ -93,11 +105,11 @@ function processingHelper(ingredient, recipe) {
 
 ServerEvents.recipes(event => {
 
-        console.log("Starting Cutting Recipe Merger script (Version: " + scriptVersion + ")...");
-        console.log("You can check the latest version of this file at:");
-        console.log("https://github.com/Yaldaba0th/KubeJS-Scripts/blob/main/farmersdelight/cutting-recipe-merger.js");
-        console.log("-------------------------------");
-        console.log("Looking for recipes...");
+    console.log("Starting Cutting Recipe Merger script (Version: " + scriptVersion + ")...");
+    console.log("You can check the latest version of this file at:");
+    console.log("https://github.com/Yaldaba0th/KubeJS-Scripts/blob/main/farmersdelight/cutting-recipe-merger.js");
+    console.log("-------------------------------");
+    console.log("Looking for recipes...");
 
     event.forEachRecipe({ type: 'farmersdelight:cutting' }, recipe => {
 
