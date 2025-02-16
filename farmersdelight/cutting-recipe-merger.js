@@ -221,4 +221,4 @@ function cuttingMerge() {
 
 }
 
-CuttingMerge();
+cuttingMerge();
