@@ -6,7 +6,7 @@
 // Place this file in the kubejs/server_scripts folder of your Minecraft instance.
 
 
-function CuttingMerge() {
+function cuttingMerge() {
 
 
     let scriptVersion = "1.1";
